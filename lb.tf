@@ -11,7 +11,7 @@ resource "aws_lb" "nginx_alb" {
   enable_cross_zone_load_balancing = true
 
   tags = {
-    Name = "${var.env}-alb"
+    Name = "${var.environment}-alb"
   }
 }
 
