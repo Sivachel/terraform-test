@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-state-bucket"
+    bucket = "logaraj-arenko-terraform-state"
     key    = "arenko/test/terraform.tfstate"
-    region = "eu-west-1"
+    region = "eu-west-2"
     profile = "test"
     use_lockfile = true
     encrypt = true

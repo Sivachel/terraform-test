@@ -77,7 +77,7 @@ resource "aws_ecs_service" "nginx_service" {
   load_balancer {
     target_group_arn = aws_lb_target_group.nginx_target_group.arn
     container_name   = "nginx-container"
-    container_port   = 81
+    container_port   = 80
   }
 
   depends_on = [aws_ecs_task_definition.nginx_task]
@@ -97,7 +97,7 @@ resource "aws_subnet" "public-1" {
 
 resource "aws_subnet" "public-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.0.0/24"
+  cidr_block              = "10.0.1.0/24"
   availability_zone       = "eu-west-2b"
   map_public_ip_on_launch = true
 
@@ -115,7 +115,7 @@ resource "aws_subnet" "web-1" {
 
 resource "aws_subnet" "web-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.6.0/24"
+  cidr_block              = "10.0.3.0/24"
   availability_zone       = "eu-west-2b"
   map_public_ip_on_launch = false
 
@@ -123,7 +123,7 @@ resource "aws_subnet" "web-2" {
 
 resource "aws_subnet" "database-1" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.5.0/24"
+  cidr_block              = "10.0.4.0/24"
   availability_zone       = "eu-west-2a"
   map_public_ip_on_launch = false
 
@@ -131,7 +131,7 @@ resource "aws_subnet" "database-1" {
 
 resource "aws_subnet" "database-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.6.0/24"
+  cidr_block              = "10.0.5.0/24"
   availability_zone       = "eu-west-2b"
   map_public_ip_on_launch = false
 
@@ -141,7 +141,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.vpc.id
 
   route {
-    cidr_block = "0.0.0.0"
+    cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
 
@@ -240,8 +240,8 @@ resource "aws_db_instance" "rds" {
   allocated_storage      = 10
   db_subnet_group_name   = aws_db_subnet_group.subnet_group.id
   engine                 = "postgres"
-  engine_version         = "postgres13"
-  instance_class         = "db.t2.micro"
+  engine_version         = "18.6"
+  instance_class         = "db.t3.micro"
   multi_az               = true
   db_name                = "mydb"
   username               = "username"
