@@ -88,10 +88,10 @@ resource "aws_security_group" "ecs-sgrp" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
+resource "aws_vpc_security_group_ingress_rule" "http_traffic_from_alb" {
   security_group_id = aws_security_group.ecs-sgrp.id
-  cidr_ipv4         = var.vpc.cidr_block
-  from_port         = 80
-  ip_protocol       = "tcp"
-  to_port           = 80
+  referenced_security_group_id = aws_security_group.alb_sg.id
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
 }
