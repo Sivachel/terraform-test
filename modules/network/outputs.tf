@@ -30,3 +30,15 @@ output "web_subnet_2" {
 output "web_subnet_3" {
   value = aws_subnet.web-3.id
 }
+
+output "database_subnet_1" {
+  value = aws_subnet.database-1.id
+}
+
+output "database_subnet_2" {
+  value = aws_subnet.database-2.id
+}
+
+output "database_subnet_3" {
+  value = aws_subnet.database-3.id
+}
