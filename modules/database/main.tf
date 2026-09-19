@@ -15,9 +15,9 @@ resource "aws_security_group" "database-sgrp" {
 resource "aws_vpc_security_group_ingress_rule" "inbound_application_traffic" {
   security_group_id = aws_security_group.database-sgrp.id
   referenced_security_group_id = var.ecs-sgrp.id
-  from_port         = 3306
+  from_port         = 5432
   ip_protocol       = "tcp"
-  to_port           = 3306
+  to_port           = 5432
 }
 
 resource "aws_db_instance" "rds" {

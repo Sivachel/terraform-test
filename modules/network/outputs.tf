@@ -1,8 +1,3 @@
-# output "lb_dns_name" {
-#   description = "The DNS name of the load balancer"
-#   value       = aws_lb.elb.dns_name
-# }
-
 output "vpc" {
   value = aws_vpc.vpc
 }

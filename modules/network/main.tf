@@ -1,79 +1,130 @@
+locals {
+  public_cidrs = [
+    for subnet_number in range (0,3):
+    cidrsubnet(var.vpc_cidr, 8 , subnet_number)
+  ]
+
+  webapp_cidrs = [
+    for subnet_number in range (3,6):
+    cidrsubnet(var.vpc_cidr, 8 , subnet_number)
+  ]
+
+  database_cidrs = [
+    for subnet_number in range (6,9):
+    cidrsubnet(var.vpc_cidr, 8 , subnet_number)
+  ]
+}
+
+
 resource "aws_vpc" "vpc" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.vpc_cidr
   instance_tenancy     = "default"
   enable_dns_support   = true
   enable_dns_hostnames = true
 
+  tags = {
+    Name = "${var.environment}-vpc"
+  }
 }
 
 resource "aws_subnet" "public-1" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.0.0/24"
-  availability_zone       = "eu-west-2a"
+  cidr_block              = local.public_cidrs[0]
+  availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = true
 
+  tags = {
+    Name = "${var.environment}-public-subnet-1"
+  }
 }
 
 resource "aws_subnet" "public-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "eu-west-2b"
+  cidr_block              = local.public_cidrs[1]
+  availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = true
 
+  tags = {
+    Name = "${var.environment}-public-subnet-2"
+  }
 }
 
 resource "aws_subnet" "public-3" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.2.0/24"
-  availability_zone       = "eu-west-2c"
+  cidr_block              = local.public_cidrs[2]
+  availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.environment}-public-subnet-3"
+  }
 }
 
 resource "aws_subnet" "web-1" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.3.0/24"
-  availability_zone       = "eu-west-2a"
+  cidr_block              = local.webapp_cidrs[0]
+  availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${var.environment}-web-subnet-1"
+  }
 
 }
 
 resource "aws_subnet" "web-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.4.0/24"
-  availability_zone       = "eu-west-2b"
+  cidr_block              = local.webapp_cidrs[1]
+  availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = false
 
+  tags = {
+    Name = "${var.environment}-web-subnet-2"
+  }
 }
 
 resource "aws_subnet" "web-3" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.5.0/24"
-  availability_zone       = "eu-west-2c"
+  cidr_block              = local.webapp_cidrs[2]
+  availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${var.environment}-web-subnet-3"
+  }
 }
 
 resource "aws_subnet" "database-1" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.6.0/24"
-  availability_zone       = "eu-west-2a"
+  cidr_block              = local.database_cidrs[0]
+  availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = false
 
+  tags = {
+    Name = "${var.environment}-database-subnet-1"
+  }
 }
 
 resource "aws_subnet" "database-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.7.0/24"
-  availability_zone       = "eu-west-2b"
+  cidr_block              = local.database_cidrs[1]
+  availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = false
 
+  tags = {
+    Name = "${var.environment}-database-subnet-2"
+  }
 }
 
 resource "aws_subnet" "database-3" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.8.0/24"
-  availability_zone       = "eu-west-2c"
+  cidr_block              = local.database_cidrs[2]
+  availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = false
 
+ tags = {
+    Name = "${var.environment}-database-subnet-3"
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -82,6 +133,10 @@ resource "aws_route_table" "public" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+     Name = "${var.environment}-public-rt"
   }
 
 }
@@ -109,6 +164,10 @@ resource "aws_route_table" "web-aza" {
     nat_gateway_id = aws_nat_gateway.nat-az-a.id
   }
 
+  tags = {
+     Name = "${var.environment}-web-aza-rt"
+  }
+
 }
 
 
@@ -123,6 +182,10 @@ resource "aws_route_table" "web-azb" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat-az-b.id
+  }
+
+  tags = {
+     Name = "${var.environment}-web-azb-rt"
   }
 
 }
@@ -140,6 +203,10 @@ resource "aws_route_table" "web-azc" {
     nat_gateway_id = aws_nat_gateway.nat-az-c.id
   }
 
+   tags = {
+     Name = "${var.environment}-web-azc-rt"
+  }
+
 }
 
 resource "aws_route_table_association" "web_azc" {
@@ -149,7 +216,10 @@ resource "aws_route_table_association" "web_azc" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
-
+  
+  tags = {
+    Name = "${var.environment}-igw"
+  }
 }
 
 resource "aws_nat_gateway" "nat-az-a" {
@@ -159,6 +229,10 @@ resource "aws_nat_gateway" "nat-az-a" {
   depends_on = [
     aws_subnet.public-1
   ]
+
+  tags = {
+    Name = "${var.environment}-nat-aza"
+  }
 }
 
 resource "aws_nat_gateway" "nat-az-b" {
@@ -168,6 +242,9 @@ resource "aws_nat_gateway" "nat-az-b" {
   depends_on = [
     aws_subnet.public-2
   ]
+  tags = {
+    Name = "${var.environment}-nat-azb"
+  }
 }
 
 resource "aws_nat_gateway" "nat-az-c" {
@@ -177,26 +254,42 @@ resource "aws_nat_gateway" "nat-az-c" {
   depends_on = [
     aws_subnet.public-3
   ]
+
+  tags = {
+    Name = "${var.environment}-nat-azc"
+  }
 }
 
 resource "aws_eip" "nat_a" {
   domain = "vpc"
 
+  tags = {
+    Name = "${var.environment}-eip-nat-aza"
+  }
 }
 
 resource "aws_eip" "nat_b" {
   domain = "vpc"
 
+  tags = {
+    Name = "${var.environment}-eip-nat-azb"
+  }
 }
 
 resource "aws_eip" "nat_c" {
   domain = "vpc"
 
+  tags = {
+    Name = "${var.environment}-eip-nat-azc"
+  }
 }
 
 resource "aws_route_table" "database" {
   vpc_id = aws_vpc.vpc.id
 
+   tags = {
+     Name = "${var.environment}-database-rt"
+  }
 }
 
 resource "aws_route_table_association" "database_aza" {
