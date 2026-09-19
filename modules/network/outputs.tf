@@ -1,0 +1,20 @@
+# output "lb_dns_name" {
+#   description = "The DNS name of the load balancer"
+#   value       = aws_lb.elb.dns_name
+# }
+
+output "vpc_id" {
+  value = aws_vpc.vpc.id
+}
+
+output "public_subnet_1" {
+  value = aws_subnet.public-1.id
+}
+
+output "public_subnet_2" {
+    value = aws_subnet.public-2.id
+}
+
+output "web_subnet_1" {
+  value = aws_subnet.web-1.id
+}

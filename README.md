@@ -10,3 +10,8 @@ Please ensure you fully understand the changes you make, we will be diving deepe
 technical session and please list out any questions or assumptions you make.
 
 Please send back your submission as a git repository or github link. 
+
+
+
+Assumptions
+- Environments are created in the same AWS account, same region but in different VPCs
