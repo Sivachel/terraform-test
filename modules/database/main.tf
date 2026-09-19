@@ -1,7 +1,7 @@
 resource "aws_security_group" "database-sgrp" {
   name        = "sgrp-database"
   description = "Allow inbound traffic from application security group"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.vpc.id
 
   ingress {
     description = "Allow traffic from application layer"

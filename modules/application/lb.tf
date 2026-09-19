@@ -30,7 +30,7 @@ resource "aws_lb_target_group" "nginx_target_group" {
   name     = "nginx-target-group"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  vpc_id   = var.vpc.id
   target_type = "ip"
 
   health_check {

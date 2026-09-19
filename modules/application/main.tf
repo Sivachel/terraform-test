@@ -57,6 +57,7 @@ resource "aws_ecs_service" "nginx_service" {
   name            = "${var.environment}-${var.service}"
   cluster         = aws_ecs_cluster.nginx_cluster.id
   task_definition = aws_ecs_task_definition.nginx_task.arn
+  desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -76,7 +77,7 @@ resource "aws_ecs_service" "nginx_service" {
 resource "aws_security_group" "ecs-sgrp" {
   name        = "sgrp-web-server"
   description = "Allow HTTP inbound traffic"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.vpc.id
 
   egress {
     description = "outbound traffic"
@@ -85,4 +86,12 @@ resource "aws_security_group" "ecs-sgrp" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
+  security_group_id = aws_security_group.ecs-sgrp.id
+  cidr_ipv4         = var.vpc.cidr_block
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
 }

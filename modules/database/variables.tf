@@ -1,5 +1,5 @@
-variable "vpc_id" {
-  description = "the VPC ID"
+variable "vpc" {
+  description = "the VPC"
 }
 
 variable "public_subnet_1" {

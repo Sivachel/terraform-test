@@ -3,8 +3,8 @@
 #   value       = aws_lb.elb.dns_name
 # }
 
-output "vpc_id" {
-  value = aws_vpc.vpc.id
+output "vpc" {
+  value = aws_vpc.vpc
 }
 
 output "public_subnet_1" {
