@@ -16,3 +16,6 @@ Please send back your submission as a git repository or github link.
 Assumptions
 - Environments are created in the same AWS account, same region but in different VPCs
 - Production requires setting up HTTPS with SSL/TLS certificates, ignored for now
+- Database only accessed by the application
+- Application uses nginx:latest, recommended to use a image tag with version
+- 
