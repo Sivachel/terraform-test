@@ -21,17 +21,17 @@ resource "aws_vpc_security_group_ingress_rule" "inbound_application_traffic" {
 }
 
 resource "aws_db_instance" "rds" {
-  allocated_storage      = 10
-  db_subnet_group_name   = aws_db_subnet_group.subnet_group.id
-  engine                 = "postgres"
-  engine_version         = "18.6"
-  instance_class         = "db.t3.micro"
-  multi_az               = true
-  db_name                = "mydb"
-  username               = "username"
-  password               = "password"
-  skip_final_snapshot    = true
-  vpc_security_group_ids = [aws_security_group.database-sgrp.id]
+  allocated_storage           = 10
+  db_subnet_group_name        = aws_db_subnet_group.subnet_group.id
+  engine                      = "postgres"
+  engine_version              = "18.6"
+  instance_class              = "db.t3.micro"
+  multi_az                    = true
+  db_name                     = "mydb"
+  username                    = "username"
+  manage_master_user_password = true
+  skip_final_snapshot         = true
+  vpc_security_group_ids      = [aws_security_group.database-sgrp.id]
 }
 
 resource "aws_db_subnet_group" "subnet_group" {
