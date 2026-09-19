@@ -15,6 +15,18 @@ output "public_subnet_2" {
     value = aws_subnet.public-2.id
 }
 
+output "public_subnet_3" {
+  value = aws_subnet.public-3.id
+}
+
 output "web_subnet_1" {
   value = aws_subnet.web-1.id
+}
+
+output "web_subnet_2" {
+  value = aws_subnet.web-2.id
+}
+
+output "web_subnet_3" {
+  value = aws_subnet.web-3.id
 }

@@ -61,7 +61,7 @@ resource "aws_ecs_service" "nginx_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = [var.web_subnet_1]
+    subnets         = [var.web_subnet_1, var.web_subnet_2, var.web_subnet_3]
     security_groups = [aws_security_group.ecs-sgrp.id]
   }
 
